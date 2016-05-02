@@ -2,11 +2,12 @@
   "name": "tynee",
   "version": "0.0.1",
   "description": "A Node.js implementation of the Tynee microservice framework",
+  "keywords": ["microservices"],
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha test"
   },
-  "author": "",
+  "author": "Paul O'Fallon (https://twitter.com/paulofallon)",
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
