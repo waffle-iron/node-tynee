@@ -1,8 +1,10 @@
 {
   "name": "tynee",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Node.js implementation of the Tynee microservice framework",
-  "keywords": ["microservices"],
+  "keywords": [
+    "microservices"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha test"
@@ -20,6 +22,7 @@
     "async": "^2.0.0-rc.3",
     "debug": "^2.2.0",
     "redis": "^2.6.0-0",
-    "shortid": "^2.2.4"
+    "shortid": "^2.2.4",
+    "tynee-client": "0.0.1"
   }
 }
