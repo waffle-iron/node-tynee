@@ -1,6 +1,8 @@
 # node-tynee
 A Node.js implementation of the Tynee microservice framework
 
+[![Build Status](https://travis-ci.org/Tynee/node-tynee.svg?branch=master)](https://travis-ci.org/Tynee/node-tynee)
+
 ** Currenly under development **
 
 ```
