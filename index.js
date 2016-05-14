@@ -3,6 +3,8 @@
 var Registry = require('./lib/registry')
   , EventEmitter = require('events')
   , redis = require('redis')
+  , debug = require('debug')('tynee')
+  , TyneeRequest = require('tyneerequest')
   , util = require('util');
 
 util.inherits(Tynee, EventEmitter);
@@ -59,20 +61,25 @@ Tynee.prototype._handler = function(req, res, next) {
     var pieces = req.path.split('/');
     var name = pieces[3];
     var version = pieces[4];
+    
+    var request = new TyneeRequest();
+    request.processHeaders(req.headers);
+    request.context = req.app.locals;
+    request.body = req.body;
 
     var provider = this.registry.find(name, version);
+    
     if (provider) {
-      provider.execute({
-        request: req,
-        passthru: passthruHeaders(req.headers)
-      },
-      function(err, data) {
+      
+      provider.execute(request, function(err, results) {
+        
         if (!err) {
           res.set({
-            'x-tynee-correlationid': req.header['x-tynee-correlationid'],
-            'x-tynee-messageid': req.header['x-tynee-messageid']
+            'x-tynee-correlationid': request.correlationId,
+            'x-tynee-messageid': request.messageId,
+            'x-tynee-serviceid': provider.id
           });
-          res.json({data: data});
+          res.json(results);
         }
         if (next) {
           next(err);
@@ -90,18 +97,6 @@ Tynee.prototype.publish = function(port, ip) {
 
 Tynee.prototype.close = function() {
   this.registry.close();
-}
-
-var passthruHeaders = function(headers) {
-  var passed = {};
-  // TODO:  Config option to specify headers to pass through
-  // if (headers['Authorization']) {
-  //   passed['Authorization'] = headers['Authorization'];
-  // }
-  if (headers['x-tynee-correlationid']) {
-    passed['x-tynee-correlationid'] = headers['x-tynee-correlationid'];
-  }
-  return(passed);
 }
 
 module.exports = Tynee;

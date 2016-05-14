@@ -1,6 +1,7 @@
 var fakeRedis = require('fakeredis');
 var expect = require('chai').expect;
 var Provider = require('../lib/provider');
+var TyneeRequest = require('../lib/tyneerequest');
 
 var colors = require('mocha/lib/reporters/base').colors;
 colors['pass'] = '93';
@@ -41,14 +42,12 @@ describe('A Provider', function() {
           });
         }
       });
-      provider.execute({
-        request: {
-          body: { data: { bar: 1 } },
-          headers: [],
-          app: { locals: {} }
-        }
-      }, function(err, value) {
-        expect(value).to.equal(2);
+      
+      var request = new TyneeRequest();
+      request.body = { data: {bar: 1 }};
+      
+      provider.execute(request, function(err, value) {
+        expect(value.data).to.equal(2);
         done();
       });
 
