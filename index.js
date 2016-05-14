@@ -4,7 +4,7 @@ var Registry = require('./lib/registry')
   , EventEmitter = require('events')
   , redis = require('redis')
   , debug = require('debug')('tynee')
-  , TyneeRequest = require('tyneerequest')
+  , TyneeRequest = require('./lib/tyneerequest')
   , util = require('util');
 
 util.inherits(Tynee, EventEmitter);
