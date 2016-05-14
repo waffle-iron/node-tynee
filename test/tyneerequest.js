@@ -133,7 +133,7 @@ describe('A TyneeRequest', function() {
       
       request.assembleResults(null, '', function(err, results) {
         var logs = results.debug.logs;
-        expect(logs.size).to.equal(2);
+        expect(logs.length).to.equal(2);
         done();
       });
       

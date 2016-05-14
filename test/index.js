@@ -83,7 +83,8 @@ describe('A Tynee Server', function() {
          
          app.use(bodyParser.json());
          app.use(tynee.handler());
-         app.listen(3000).on('listening', function() {
+         var server = app.listen(3000);
+         server.on('listening', function() {
              tynee.publish(3000);
          });
  
@@ -96,8 +97,61 @@ describe('A Tynee Server', function() {
              
              client.on('ready', function() {
                  
-                client.invoke({ name: 'foo', body: ''}, function(err, results) {
+                client.invoke({ name: 'foo'}, function(err, results) {
                     expect(results.body).to.equal('bar');
+                    expect(results["debug"]).to.not.exist;
+                    server.close();
+                    done();
+                });
+                
+             });
+             
+         });
+          
+      });
+      
+      it('should handle a request in debug mode', function(done) {
+         
+         var app = express();
+         
+         var redisClient = fakeRedis.createClient();
+         
+         var tynee = new Tynee({
+             redisClient: redisClient
+         });
+         
+         tynee.add({
+             name: 'foo',
+             version: '1.0.0',
+             service: function(m, cb) {
+                 process.nextTick(function() {
+                     m.log("Returning 'bar' for this request");
+                     cb(null, 'bar');
+                 });
+             }
+         });
+         
+         app.use(bodyParser.json());
+         app.use(tynee.handler());
+         var server = app.listen(3000);
+         server.on('listening', function() {
+             tynee.publish(3000);
+         });
+ 
+         tynee.on('ready', function() {
+             
+             var client = new TyneeClient({
+                 redisClient: redisClient,
+                 dependencies: {name: 'foo', version: '1.0.0'}
+             });
+             
+             client.on('ready', function() {
+                 
+                client.invoke({ name: 'foo', debug: true }, function(err, results) {
+                    expect(results.body).to.equal('bar');
+                    expect(results["debug"]).to.exist;
+                    expect(results["debug"]["logs"].length).to.equal(1);
+                    server.close();
                     done();
                 });
                 
