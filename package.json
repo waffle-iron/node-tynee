@@ -12,6 +12,7 @@
   "author": "Paul O'Fallon (https://twitter.com/paulofallon)",
   "license": "MIT",
   "devDependencies": {
+    "body-parser": "^1.15.1",
     "chai": "^3.5.0",
     "express": "^4.13.4",
     "fakeredis": "^1.0.3",
