@@ -77,8 +77,11 @@ Tynee.prototype._handler = function(req, res, next) {
           res.set({
             'x-tynee-correlationid': request.correlationId,
             'x-tynee-messageid': request.messageId,
-            'x-tynee-serviceid': provider.id
+            'x-tynee-serviceid': provider.id,
           });
+          if (request.isDebug) {
+            res.set('x-tynee-debug', 1);
+          }
           res.json(results);
         }
         if (next) {
