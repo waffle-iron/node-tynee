@@ -160,6 +160,97 @@ describe('A Tynee Server', function() {
          });
           
       });
+      
+      it.only('should handle cascading debug info', function(done) {
+          
+         this.timeout(3000);
+         
+         var redisClient = fakeRedis.createClient();
+         
+         var app = express();
+         
+         var tynee = new Tynee({
+             redisClient: redisClient
+         });
+         
+         tynee.add({
+             name: 'foo',
+             version: '1.0.0',
+             service: function(m, cb) {
+                 process.nextTick(function() {
+                     m.log("Returning 'bar' for this request");
+                     cb(null, 'bar');
+                 });
+             }
+         });
+         
+         app.use(bodyParser.json());
+         app.use(tynee.handler());
+         var server = app.listen(3000);
+         server.on('listening', function() {
+             console.log("server1 listening!");
+             tynee.publish(3000);
+         });
+ 
+         tynee.on('ready', function() {
+             
+             console.log("tynee1 ready!");
+            
+            var app2 = express();
+            
+            var tynee2 = new Tynee({
+                redisClient: redisClient
+            });
+            
+            tynee2.add({
+                name: 'baz',
+                version: '1.0.0',
+                dependencies: { name: 'foo', version: '1.0.0' },
+                service: function(m, cb) {
+                    m.invoke({name: 'foo'}, function(err, results) {
+                        m.log("Adding 'baz'");
+                        cb(null, results.body + 'baz'); 
+                    });
+                }
+            });
+            
+            app2.use(bodyParser.json());
+            app2.use(tynee2.handler());
+            var server2 = app2.listen(3001);
+            server2.on('listening', function() {
+                console.log("server2 listening!");
+                tynee2.publish(3001);
+            });
+            
+            tynee2.on('ready', function() {
+                
+                console.log("tynee2 ready!");
+             
+                var client = new TyneeClient({
+                    redisClient: redisClient,
+                    dependencies: {name: 'baz', version: '1.0.0'}
+                });
+                
+                client.on('ready', function() {
+                    
+                    console.log("client is ready!");
+                    
+                    client.invoke({ name: 'baz', debug: true }, function(err, results) {
+                        expect(results.body).to.equal('barbaz');
+                        expect(results["debug"]).to.exist;
+                        expect(results["debug"]["logs"].length).to.equal(1);
+                        console.log(JSON.stringify(results,null, 2));
+                        server.close();
+                        server2.close();
+                        done();
+                    });
+                    
+                });
+            });
+             
+         });
+          
+      });
        
    });
     
