@@ -239,7 +239,6 @@ describe('A Tynee Server', function() {
                         expect(results.body).to.equal('barbaz');
                         expect(results["debug"]).to.exist;
                         expect(results["debug"]["logs"].length).to.equal(1);
-                        console.log(JSON.stringify(results,null, 2));
                         server.close();
                         server2.close();
                         done();
