@@ -9,7 +9,7 @@ describe('A Registry', function() {
 
   describe('when publishing', function() {
 
-    var client = fakeRedis.createClient();
+    var client = fakeRedis.createClient({fast: true});
 
     it('should add it to Redis', function() {
 

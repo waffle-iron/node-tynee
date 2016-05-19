@@ -12,7 +12,7 @@ describe('A Tynee Server', function() {
       it('should emit a "ready" event', function(done) {
          
          var tynee = new Tynee({
-             redisClient: fakeRedis.createClient()
+             redisClient: fakeRedis.createClient({fast: true})
          });
          
          tynee.add({
@@ -36,7 +36,7 @@ describe('A Tynee Server', function() {
       it('should emit an "online" event', function(done) {
                    
          var tynee = new Tynee({
-             redisClient: fakeRedis.createClient()
+             redisClient: fakeRedis.createClient({fast: true})
          });
          
          tynee.add({
@@ -65,7 +65,7 @@ describe('A Tynee Server', function() {
          
          var app = express();
          
-         var redisClient = fakeRedis.createClient();
+         var redisClient = fakeRedis.createClient({fast: true});
          
          var tynee = new Tynee({
              redisClient: redisClient
@@ -111,10 +111,8 @@ describe('A Tynee Server', function() {
       });
       
       it('should handle cascading debug info', function(done) {
-          
-         this.timeout(3000);
          
-         var redisClient = fakeRedis.createClient();
+         var redisClient = fakeRedis.createClient({fast: true});
          
          var app = express();
          

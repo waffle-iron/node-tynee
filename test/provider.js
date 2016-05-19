@@ -8,7 +8,7 @@ colors['pass'] = '93';
 
 describe('A Provider', function() {
   describe('when refreshing', function() {
-    var client = fakeRedis.createClient();
+    var client = fakeRedis.createClient({fast: true});
 
     it('should publish to Redis', function(done) {
       var provider = new Provider({
@@ -30,7 +30,7 @@ describe('A Provider', function() {
   });
 
   describe('when executing', function() {
-    var client = fakeRedis.createClient();
+    var client = fakeRedis.createClient({fast: true});
 
     it('should execute the function', function(done) {
       var provider = new Provider({

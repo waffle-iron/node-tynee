@@ -81,7 +81,7 @@ describe('A TyneeRequest', function() {
     it('should include "invoke" when passed a client', function() {
       
       var client = new TyneeClient({
-        redisClient: fakeRedis.createClient()
+        redisClient: fakeRedis.createClient({fast: true})
       });
       
       var request = new TyneeRequest();
