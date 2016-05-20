@@ -81,6 +81,7 @@ Tynee.prototype._handler = function(req, res, next) {
           });
           if (request.isDebug) {
             res.set('x-tynee-debug', 1);
+            results.debug.serviceId = provider.id;
           }
           res.json(results);
         }
