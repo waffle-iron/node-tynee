@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/Tynee/node-tynee.png?label=ready&title=Ready)](https://waffle.io/Tynee/node-tynee)
 # node-tynee
 A Node.js implementation of the Tynee microservice framework
 
